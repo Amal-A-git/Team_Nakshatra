@@ -1,4 +1,4 @@
-# AI Hackathon Project: News Summarizer
+# AI Hackathon Project: Nakshatra News
 
 Welcome to the **AI Hackathon Project** repository! This project focuses on building a **News Summarizer** that fetches news articles, summarizes them using transformer models, and integrates seamlessly with deployment platforms like Render or local environments.
 
