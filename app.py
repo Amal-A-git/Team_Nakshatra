@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Initialize the BERT summarization model
-summarizer = pipeline("summarization", model="t5-small")
+summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
 api_key=''
 # Function to fetch news articles from NewsAPI
 def fetch_articles(query):
@@ -39,7 +39,7 @@ def summarize():
         title = article['title']
         content = article['content'] or article['description']
         if content:
-            summary = summarizer(content, max_length=1000, min_length=300, do_sample=False)[0]['summary_text']
+            summary = summarizer(content, max_length=1000, min_length=500, do_sample=False)[0]['summary_text']
             summaries.append({"title": title, "summary": summary})
         else:
             summaries.append({"title": title, "summary": "Content not available"})
