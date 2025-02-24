@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Summarizer</title>
+</head>
+<body>
+    <h1>News Summarizer</h1>
+    <form id="summarizer-form">
+        <label for="query">Enter a topic:</label>
+        <input type="text" id="query" name="query" required>
+        <button type="submit">Summarize</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('summarizer-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const query = document.getElementById('query').value;
+
+            const response = await fetch('/summarize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query })
+            });
+
+            const summaries = await response.json();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (response.ok) {
+                summaries.forEach(summary => {
+                    const summaryDiv = document.createElement('div');
+                    summaryDiv.innerHTML = `<h3>${summary.title}</h3><p>${summary.summary}</p>`;
+                    resultsDiv.appendChild(summaryDiv);
+                });
+            } else {
+                resultsDiv.innerHTML = `<p>Error: ${summaries.error}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
