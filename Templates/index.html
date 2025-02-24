@@ -4,40 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Summarizer</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container Styling */
+        .container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
+            color: #6a11cb;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #6a11cb;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2575fc;
+        }
+
+        /* Results Section */
+        #results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item h3 {
+            font-size: 1.2rem;
+            color: #333333;
+        }
+
+        .result-item p {
+            font-size: 1rem;
+            color: #666666;
+        }
+    </style>
 </head>
 <body>
-    <h1>News Summarizer</h1>
-    <form id="summarizer-form">
-        <label for="query">Enter a topic:</label>
-        <input type="text" id="query" name="query" required>
-        <button type="submit">Summarize</button>
-    </form>
+    <div class="container">
+        <h1>Nakshatra News</h1>
+        
+        <!-- Form Section -->
+        <form id="summarizer-form">
+            <label for="query">Enter a topic:</label>
+            <input type="text" id="query" name="query" placeholder="e.g., Artificial Intelligence" required>
+            
+            <button type="submit">Result</button>
+        </form>
 
-    <div id="results"></div>
+        <!-- Results Section -->
+        <div id="results"></div>
+    </div>
 
     <script>
         document.getElementById('summarizer-form').addEventListener('submit', async function(event) {
             event.preventDefault();
+            
             const query = document.getElementById('query').value;
 
             const response = await fetch('/summarize', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: query })
+                body: JSON.stringify({ query })
             });
 
-            const summaries = await response.json();
             const resultsDiv = document.getElementById('results');
+            
+            // Clear previous results
             resultsDiv.innerHTML = '';
 
             if (response.ok) {
+                const summaries = await response.json();
                 summaries.forEach(summary => {
                     const summaryDiv = document.createElement('div');
+                    summaryDiv.classList.add('result-item');
                     summaryDiv.innerHTML = `<h3>${summary.title}</h3><p>${summary.summary}</p>`;
                     resultsDiv.appendChild(summaryDiv);
                 });
             } else {
-                resultsDiv.innerHTML = `<p>Error: ${summaries.error}</p>`;
+                const errorData = await response.json();
+                resultsDiv.innerHTML = `<p style="color:red;">Error: ${errorData.error}</p>`;
             }
         });
     </script>

@@ -6,11 +6,11 @@ import os
 app = Flask(__name__)
 
 # Initialize the BERT summarization model
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+summarizer = pipeline("summarization", model="t5-small")
 api_key=''
 # Function to fetch news articles from NewsAPI
-def fetch_articles(query,api_key):
-    # api_key = os.getenv('NEWSAPI_KEY')  # Retrieve API key from environment variables
+def fetch_articles(query):
+    api_key = os.getenv('NEWSAPI_KEY')  # Retrieve API key from environment variables
     url = f'https://newsapi.org/v2/everything?q={query}&apiKey={api_key}'
     response = requests.get(url)
     if response.status_code == 200:
