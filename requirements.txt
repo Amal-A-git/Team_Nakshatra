@@ -2,3 +2,5 @@ flask
 requests
 transformers
 gunicorn
+torch 
+tensorflow
