@@ -7,10 +7,10 @@ app = Flask(__name__)
 
 # Initialize the BERT summarization model
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-
+api_key=''
 # Function to fetch news articles from NewsAPI
-def fetch_articles(query):
-    api_key = os.getenv('NEWSAPI_KEY')  # Retrieve API key from environment variables
+def fetch_articles(query,api_key):
+    # api_key = os.getenv('NEWSAPI_KEY')  # Retrieve API key from environment variables
     url = f'https://newsapi.org/v2/everything?q={query}&apiKey={api_key}'
     response = requests.get(url)
     if response.status_code == 200:
@@ -33,13 +33,13 @@ def summarize():
         return jsonify({"error": "Query is required"}), 400
 
     # Fetch and summarize articles
-    articles = fetch_articles(query)
+    articles = fetch_articles(query,api_key)
     summaries = []
-    for article in articles[:5]:  # Limit to top 5 articles
+    for article in articles[:1]:  # Limit to top 5 articles
         title = article['title']
         content = article['content'] or article['description']
         if content:
-            summary = summarizer(content, max_length=150, min_length=50, do_sample=False)[0]['summary_text']
+            summary = summarizer(content, max_length=1000, min_length=300, do_sample=False)[0]['summary_text']
             summaries.append({"title": title, "summary": summary})
         else:
             summaries.append({"title": title, "summary": "Content not available"})
